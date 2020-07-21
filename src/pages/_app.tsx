@@ -23,7 +23,8 @@ export const theme = createMuiTheme({
     },
     background: {
       default: '#fff'
-    }
+    },
+
   },
   spacing: 8
 });

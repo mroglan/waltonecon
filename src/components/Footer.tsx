@@ -16,7 +16,7 @@ export default function Footer() {
 
     const classes = useStyles()
     return (
-        <Box borderTop="1px solid #000" pb={3} px={3}>
+        <Box borderTop="1px solid #000" pb={1} px={3}>
             <Grid container spacing={3} alignItems="center">
                 <Grid item xs={12} sm={4}>
                     <Box textAlign="center">

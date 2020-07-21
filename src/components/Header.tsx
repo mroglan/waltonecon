@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        
+        zIndex: 12
     },
     img: {
         maxWidth: 40,
