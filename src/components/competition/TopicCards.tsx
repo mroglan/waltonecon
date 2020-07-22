@@ -48,8 +48,6 @@ export default function TopicCards() {
                                 Microeconomics
                             </Typography>
                         </Box>
-                        <Box>
-                        </Box>
                     </CardContent>
                 </Card>
             </Grid>
@@ -61,8 +59,6 @@ export default function TopicCards() {
                                 Macroeconomics
                             </Typography>
                         </Box>
-                        <Box>
-                        </Box>
                     </CardContent>
                 </Card>
             </Grid>
@@ -73,8 +69,6 @@ export default function TopicCards() {
                             <Typography variant="h6">
                                 International Economics
                             </Typography>
-                        </Box>
-                        <Box>
                         </Box>
                     </CardContent>
                 </Card>
