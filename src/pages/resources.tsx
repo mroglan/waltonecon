@@ -4,8 +4,10 @@ import Head from 'next/head'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import ResourceCard from '../components/resources/ResourceCard'
+import Filters from '../components/resources/Filters'
 import {IResource} from '../database/modelInterfaces'
 import database from '../database/database'
+import {useReducer, useMemo} from 'react'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -45,7 +47,69 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
+export interface IFilterState {
+    topic: string;
+    resourceType: string;
+    search: string;
+}
+
+interface IFilterAction {
+    type: string;
+    payload: string;
+}
+
+function filterReducer(state:IFilterState, action:IFilterAction) {
+    switch(action.type) {
+        case 'changeTopic': 
+            return {...state, topic: action.payload}
+        case 'changeResourceType': 
+            return {...state, resourceType: action.payload}
+        case 'changeSearch':
+            return {...state, search: action.payload}
+        default:
+            return state
+    }
+}
+
+function correctTopic(topic:string, filter:string) {
+    if(filter === 'any') return true
+    if(filter === 'micro' && topic === 'Microeconomics') return true
+    if(filter === 'macro' && topic === 'Macroeconomics') return true
+    if(filter === 'fundamentals' && topic === 'Fundamentals') return true
+
+    return false
+}
+
+function correctResourceType(type:string, filter:string) {
+    if(filter === 'any') return true
+    if(filter === 'presentations' && type === 'Presentation') return true
+    if(filter === 'pTests' && type === 'Practice Test') return true
+
+    return false
+}
+
+function matchesSearch(title:string, filter:string) {
+    if(!filter) return true
+    const regex = new RegExp(filter, 'i')
+    if(title.match(regex)) return true
+
+    return false
+}
+
 export default function Resources({resources}) {
+
+    const [filters, filterDispatch] = useReducer(filterReducer, {
+        topic: 'any',
+        resourceType: 'any',
+        search: ''
+    })
+
+    const filteredResources = useMemo(() => (
+        resources.filter(resource => {
+            return correctTopic(resource.econType, filters.topic) && correctResourceType(resource.resourceType, filters.resourceType) &&
+            matchesSearch(resource.title, filters.search)
+        })
+    ), [filters])
 
     const classes = useStyles()
     return (
@@ -71,8 +135,11 @@ export default function Resources({resources}) {
                                         found <a href="https://www.councilforeconed.org/national-economics-challenge/what-should-i-use-to-prepare/" className={classes.link}>here</a>.
                                     </Typography>
                                 </Box>
+                                <Box pb={3}>
+                                    <Filters filters={filters} dispatch={filterDispatch} />
+                                </Box>
                                 <Grid container spacing={3} alignItems="stretch">
-                                    {resources.map((resource, index) => (
+                                    {filteredResources.map((resource, index) => (
                                         <Grid item key={index} xs={12} md={6} xl={4}>
                                             <ResourceCard resource={resource} />
                                         </Grid>
