@@ -140,7 +140,7 @@ export default function Resources({resources}) {
                                 </Box>
                                 <Grid container spacing={3} alignItems="stretch">
                                     {filteredResources.map((resource, index) => (
-                                        <Grid item key={index} xs={12} md={6} xl={4}>
+                                        <Grid item key={index} xs={12} md={6}>
                                             <ResourceCard resource={resource} />
                                         </Grid>
                                     ))}

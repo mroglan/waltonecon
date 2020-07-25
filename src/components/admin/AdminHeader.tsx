@@ -53,35 +53,9 @@ export default function Header() {
                 </Link>
                 <div style={{flexGrow: 1}} />
                 <div className={classes.showSmUp}>
-                    <Grid container spacing={3}>
-                        <Grid item>
-                            <Link href="/competition">
-                                <a className={classes.link}>
-                                    <Typography variant="button">
-                                        Competition
-                                    </Typography>
-                                </a>
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="/resources">
-                                <a className={classes.link}>
-                                    <Typography variant="button">
-                                        Resources
-                                    </Typography>
-                                </a>
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="/contact">
-                                <a className={classes.link}>
-                                    <Typography variant="button">
-                                        Contact
-                                    </Typography>
-                                </a>
-                            </Link>
-                        </Grid>
-                    </Grid>
+                    <Typography variant="h5" className={classes.title}>
+                        Administrator
+                    </Typography>
                 </div>
             </Toolbar>
         </AppBar>
