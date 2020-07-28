@@ -39,7 +39,7 @@ export default function TopicCards(props) {
     const classes = useStyles()
     return (
         <>
-        <Grid container spacing={stacked ? 3 : 0} alignItems="center">
+        <Grid container spacing={stacked ? 3 : 0} alignItems="stretch">
             <Grid className={classes.gridItem} item xs={12} md={4}>
                 <Card className={classes.card} variant="outlined">
                     <CardContent style={{paddingTop: 0, paddingBottom: 0}}>

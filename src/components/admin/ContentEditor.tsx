@@ -25,13 +25,12 @@ export default function ContentEditor({content, saveToDB, additionalControls, cu
     }
 
     const sendProgress = async (data:string) => {
-        const status = await saveToDB(data)
+        await saveToDB(data)
+        console.log('we have returned...')
         setLoading(false)
-        if(status !== 200) {
-            setError(true)
-        }
     }
 
+    console.log('loading', loading)
     const classes = useStyles()
     return (
         <Box>

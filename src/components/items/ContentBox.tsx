@@ -1,5 +1,7 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Box} from '@material-ui/core'
+import TopicCards from '../competition/TopicCards'
+import {useEffect} from 'react'
 
 const useStyles = makeStyles(theme => ({
     root: {

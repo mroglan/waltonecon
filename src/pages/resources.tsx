@@ -4,10 +4,13 @@ import Head from 'next/head'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import ResourceCard from '../components/resources/ResourceCard'
+import ContentBox from '../components/items/ContentBox'
+import {IResourcesText} from '../database/modelInterfaces'
 import Filters from '../components/resources/Filters'
 import {IResource} from '../database/modelInterfaces'
 import database from '../database/database'
 import {useReducer, useMemo} from 'react'
+import getHTMLFromContentState from '../utils/getHTMLFromContentState'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -96,7 +99,7 @@ function matchesSearch(title:string, filter:string) {
     return false
 }
 
-export default function Resources({resources}) {
+export default function Resources({resources, content}) {
 
     const [filters, filterDispatch] = useReducer(filterReducer, {
         topic: 'any',
@@ -110,6 +113,10 @@ export default function Resources({resources}) {
             matchesSearch(resource.title, filters.search)
         })
     ), [filters])
+
+    const contentWithHTML = content.map(message => (
+        {...message, htmlText: message.type === 'contentEditorContent' ? getHTMLFromContentState(message.content) : ''}
+    ))
 
     const classes = useStyles()
     return (
@@ -128,12 +135,8 @@ export default function Resources({resources}) {
                                         Resources
                                     </Typography>
                                 </Box>
-                                <Box py={3}>
-                                    <Typography variant="body1" className={classes.text}>
-                                        The following are some resources you can use to practice for the Economics Challenge. 
-                                        More information on resources to prepare for the competition can be
-                                        found <a href="https://www.councilforeconed.org/national-economics-challenge/what-should-i-use-to-prepare/" className={classes.link}>here</a>.
-                                    </Typography>
+                                <Box>
+                                    {contentWithHTML.map(({htmlText}, index) => <ContentBox key={index} text={htmlText} />)}
                                 </Box>
                                 <Box pb={3}>
                                     <Filters filters={filters} dispatch={filterDispatch} />
@@ -160,9 +163,24 @@ export default function Resources({resources}) {
 export async function getStaticProps() {
     const db = await database()
     
-    const resources:IResource[] = await db.collection('resources').find({}).toArray()
+    const [resources, resourcesInfo] = await Promise.all([
+        db.collection('resources').find({}).toArray(), 
+        db.collection('content').findOne({'component': 'resources'})
+    ])
 
-    console.log('resources', resources)
+    //console.log('resources', resources)
 
-    return {props: {resources: JSON.parse(JSON.stringify(resources))}, unstable_revalidate: 1}
+    return {props: {resources: JSON.parse(JSON.stringify(resources)), content: resourcesInfo.content}, unstable_revalidate: 1}
 }
+
+/*
+
+Original resources text:
+
+<Typography variant="body1" className={classes.text}>
+    The following are some resources you can use to practice for the Economics Challenge. 
+    More information on resources to prepare for the competition can be
+    found <a href="https://www.councilforeconed.org/national-economics-challenge/what-should-i-use-to-prepare/" className={classes.link}>here</a>.
+</Typography>
+
+*/

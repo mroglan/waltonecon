@@ -1,16 +1,14 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Box, Grid, Paper, Typography, Button} from '@material-ui/core'
 import database from '../../database/database'
-import { ICompetition } from '../../database/modelInterfaces'
+import { IResourcesText } from '../../database/modelInterfaces'
 import Head from 'next/head'
 import AdminHeader from '../../components/admin/AdminHeader'
 import SideBar from '../../components/admin/SideBar'
 import Footer from '../../components/Footer'
 import ContentEditor from '../../components/admin/ContentEditor'
-import {useState, useEffect, useRef, useMemo} from 'react'
-import ViewColumnIcon from '@material-ui/icons/ViewColumn';
-import TopicCards from '../../components/competition/TopicCards'
 import {TMUIRichEditor} from '../../components/admin/editorInterfaces'
+import { useRef } from 'react'
 import updateContent from '../../utils/requests/updateContent'
 
 const useStyles = makeStyles(theme => ({
@@ -48,30 +46,13 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Competition({content}) {
+export default function Resources({content}) {
 
-    const textEditor1Ref = useRef<TMUIRichEditor>()
-    const textEditor2Ref = useRef<TMUIRichEditor>()
+    const textEditorRef = useRef<TMUIRichEditor>()
 
-    const currentContent = useRef<any[]>()
-    useMemo(() => {
-        currentContent.current = content
-    }, [])
+    const sendProgressToDb = async (content:string) => {
 
-    const sendFirstSectionProgressToDb = async (content:string) => {
-        currentContent.current[0] = {type: 'contentEditorContent', content}
-
-        const status = await updateContent(currentContent.current, 'competition')
-
-        //console.log('status', status)
-        return status
-    }
-
-    const sendSecondSectionToDb = async (content:string) => {
-
-        currentContent.current[2] = {type: 'contentEditorContent', content}
-
-        const status = await updateContent(currentContent.current, 'competition')
+        const status = await updateContent([{type: 'contentEditorContent', content}], 'resources')
 
         return status
     }
@@ -80,7 +61,7 @@ export default function Competition({content}) {
     return (
         <>
             <Head>
-                <title>Admin Competition - Walton Economics Challenge</title>    
+                <title>Admin Resources - Walton Economics Challenge</title>    
             </Head>
             <div className={classes.root}>
                 <header className={classes.header}>
@@ -94,18 +75,11 @@ export default function Competition({content}) {
                         <Paper className={classes.paper} elevation={0}>
                             <Box>
                                 <Typography variant="h5">
-                                    Customize the Competition section content
+                                    Customize the Resources section content
                                 </Typography>
                             </Box>
-                            <ContentEditor content={content[0].content} additionalControls={[]}
-                             customControls={[]}
-                             saveToDB={sendFirstSectionProgressToDb}
-                             textEditorRef={textEditor1Ref} />
-                             <Box mt={4}>
-                                <TopicCards />
-                             </Box>
-                             <ContentEditor content={content[2].content} additionalControls={[]}
-                             customControls={[]} saveToDB={sendSecondSectionToDb} textEditorRef={textEditor2Ref} />
+                            <ContentEditor content={content[0].content} additionalControls={[]} customControls={[]} saveToDB={sendProgressToDb}
+                            textEditorRef={textEditorRef} />
                         </Paper>
                     </Box>
                 </main>
@@ -120,7 +94,12 @@ export default function Competition({content}) {
 export async function getServerSideProps() {
     const db = await database()
 
-    const competitionInfo:ICompetition = await db.collection('content').findOne({'component': 'competition'})
+    const [resourcesInfo, resources] = await Promise.all([
+        db.collection('content').findOne({'component': 'resources'}),
+        db.collection('resources').find({}).toArray()
+    ])
 
-    return {props: {content: competitionInfo.content}}
+    
+
+    return {props: {content: resourcesInfo.content}}
 }

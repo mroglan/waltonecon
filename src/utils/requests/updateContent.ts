@@ -1,6 +1,6 @@
 
 
-export default async function updateContent(text:string, component:string) {
+export default async function updateContent(newContent, component:string) {
     
     const res = await fetch(`${process.env.BASE_ROUTE}/api/updatecontent`, {
         method: 'POST',
@@ -9,7 +9,7 @@ export default async function updateContent(text:string, component:string) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            content: text,
+            content: newContent,
             component: component
         })
     })

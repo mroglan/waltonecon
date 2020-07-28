@@ -50,10 +50,10 @@ export default function About({content}) {
 
     const textEditorRef = useRef<TMUIRichEditor>()
 
-    const sendProgressToDb = async (text:string) => {
+    const sendProgressToDb = async (content:string) => {
         console.log('sending to db...')
         
-        const status = await updateContent(text, 'about')
+        const status = await updateContent([{type: 'contentEditorContent', content}], 'about')
 
         return status
     }
@@ -79,7 +79,7 @@ export default function About({content}) {
                                     Customize the About section content
                                 </Typography>
                             </Box>
-                            <ContentEditor content={content} additionalControls={[]} customControls={[]} saveToDB={sendProgressToDb}
+                            <ContentEditor content={content[0].content} additionalControls={[]} customControls={[]} saveToDB={sendProgressToDb}
                             textEditorRef={textEditorRef} />
                         </Paper>
                     </Box>

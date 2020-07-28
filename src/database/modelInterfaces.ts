@@ -16,11 +16,20 @@ interface Content {
     component: string;
 }
 
+interface ContentItem {
+    type: string;
+    content?: string;
+}
+
 export interface IAbout extends Content {
-    content: string;
+    content: ContentItem[];
 }
 
 export interface ICompetition extends Content {
-    content: string;
+    content: ContentItem[];
+}
+
+export interface IResourcesText extends Content {
+    content: ContentItem[];
 }
 

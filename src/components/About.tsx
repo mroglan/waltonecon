@@ -12,25 +12,26 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface Props {
-    content: string;
+    content: any;
 }
 
 export default function About({content}:Props) {
 
-    const htmlText = getHTMLFromContentState(content)
-    //console.log(htmlText)
+    const contentWithHTML = content.map(message => {
+        return {...message, htmlText: message.type === 'contentEditorContent' ? getHTMLFromContentState(message.content) : ''}
+    })
 
     const classes = useStyles()
     return (
         <Paper className={classes.root} elevation={3}>
-            <ContentBox text={htmlText} />
+            {contentWithHTML.map(({htmlText}, index) => <ContentBox key={index} text={htmlText} />)}
         </Paper>
     )
 }
 
 /*
 
-Here is the original hard-coded about section: (what is now the ContentBox)
+Here is the original hard-coded about section: (what is now in the Paper element)
 
 <Box>
     <Typography variant="body1" className={classes.content}>

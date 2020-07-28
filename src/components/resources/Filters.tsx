@@ -4,7 +4,7 @@ import {Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem,
 import SearchIcon from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
 import PurpleSwitch from '../items/Switch'
-import {useState, useRef} from 'react'
+import {useState, useRef, KeyboardEvent} from 'react'
 
 const useStyles = makeStyles(theme => ({
     select: {
@@ -33,7 +33,13 @@ export default function Filters({filters, dispatch}) {
     const [showFilters, setShowFilters] = useState(false)
     const [search, setSearch] = useState('')
 
+    const searchRef = useRef<HTMLButtonElement>()
+
     const toggleFilters = (val:boolean) => setShowFilters(val)
+
+    const handleKeyPress = (e:KeyboardEvent) => {
+        if(e.key === 'Enter') searchRef.current?.click()
+    }
 
     const classes = useStyles()
     return (
@@ -45,7 +51,7 @@ export default function Filters({filters, dispatch}) {
                     </Grid>
                     <Grid item>
                         <FormControl variant="outlined">
-                            <OutlinedInput id="search-bar" placeholder="Search..." 
+                            <OutlinedInput id="search-bar" placeholder="Search..." onKeyPress={handleKeyPress}
                             value={search} onChange={(e) => setSearch(e.target.value.toString())} margin="dense"
                             startAdornment={
                                 <InputAdornment position="start">
@@ -53,7 +59,7 @@ export default function Filters({filters, dispatch}) {
                                         type: 'changeSearch',
                                         payload: search
                                     })} className={classes.searchButton}
-                                    edge="start">
+                                    edge="start" ref={searchRef}>
                                         <SearchIcon />
                                     </IconButton>
                                 </InputAdornment>
