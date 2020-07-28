@@ -20,3 +20,7 @@ export interface IAbout extends Content {
     content: string;
 }
 
+export interface ICompetition extends Content {
+    content: string;
+}
+

@@ -6,7 +6,7 @@ export default async function UpdateAbout(req:NextApiRequest, res:NextApiRespons
     try {
         const db = await database()
 
-        await db.collection('content').updateOne({'component': 'about'}, {'$set': {'content': req.body.content}})
+        await db.collection('content').updateOne({'component': req.body.component}, {'$set': {'content': req.body.content}})
 
         return res.status(200).json({msg: 'Successful update :)'})
         

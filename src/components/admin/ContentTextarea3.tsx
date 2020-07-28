@@ -49,7 +49,7 @@ const controls = [
     'bold', 'italic', 'underline', 'highlight', 'link', 'media', 'numberList', 'bulletList', 'undo', 'redo'
 ]
 
-export default function ContentTextarea3({content, inputRef, sendProgress}) {
+export default function ContentTextarea3({content, inputRef, sendProgress, additionalControls, customControls}) {
 
     const [onClientSide, setOnClientSide] = useState(false)
 
@@ -60,15 +60,6 @@ export default function ContentTextarea3({content, inputRef, sendProgress}) {
     const updateContent = (data) => {
         console.log(data) // this will show me what styles i have (e.g 'HIGHLIGHT', 'BOLD', etc.)
 
-        // no need to store html in database...
-        // const contentState = convertFromRaw(JSON.parse(data))
-        // console.log('contentState', contentState)
-        // const htmlText = stateToHTML(contentState, {
-        //     inlineStyles: {
-        //         HIGHLIGHT: {style: {backgroundColor: 'yellow'}}
-        //     }
-        // })
-        // console.log(htmlText)
         sendProgress(data)
     }
 
@@ -76,7 +67,7 @@ export default function ContentTextarea3({content, inputRef, sendProgress}) {
         <ThemeProvider theme={theme}>
             <Box>
                 {onClientSide && <MUIRichTextEditor  ref={inputRef} label="Start typing..." defaultValue={content}
-                 onSave={updateContent} controls={controls} />}
+                 onSave={updateContent} controls={[...controls, ...additionalControls]} customControls={customControls} />}
             </Box>
         </ThemeProvider>
     )

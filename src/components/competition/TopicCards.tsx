@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => ({
                 top: '50%',
                 left: 0,
                 border: `1px solid ${theme.palette.primary.main}`,
+                backgroundColor: theme.palette.primary.main,
                 zIndex: 0
             }
         }
@@ -31,15 +32,14 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function TopicCards() {
-
-    const [cardOpen, setCardOpen] = useState(false)
+export default function TopicCards(props) {
 
     const stacked = useMediaQuery('(max-width:960px)')
 
     const classes = useStyles()
     return (
-        <Grid container spacing={stacked ? 3 : 0} alignItems={cardOpen ? 'center' : 'stretch'}>
+        <>
+        <Grid container spacing={stacked ? 3 : 0} alignItems="center">
             <Grid className={classes.gridItem} item xs={12} md={4}>
                 <Card className={classes.card} variant="outlined">
                     <CardContent style={{paddingTop: 0, paddingBottom: 0}}>
@@ -74,5 +74,6 @@ export default function TopicCards() {
                 </Card>
             </Grid>
         </Grid>
+        </>
     )
 }

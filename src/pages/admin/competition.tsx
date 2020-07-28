@@ -1,14 +1,16 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Box, Grid, Paper, Typography, Button} from '@material-ui/core'
 import database from '../../database/database'
-import { IAbout } from '../../database/modelInterfaces'
+import { ICompetition } from '../../database/modelInterfaces'
 import Head from 'next/head'
 import AdminHeader from '../../components/admin/AdminHeader'
 import SideBar from '../../components/admin/SideBar'
 import Footer from '../../components/Footer'
 import ContentEditor from '../../components/admin/ContentEditor'
+import {useState, useEffect, useRef} from 'react'
+import ViewColumnIcon from '@material-ui/icons/ViewColumn';
+import TopicCards from '../../components/competition/TopicCards'
 import {TMUIRichEditor} from '../../components/admin/editorInterfaces'
-import { useRef } from 'react'
 import updateContent from '../../utils/requests/updateContent'
 
 const useStyles = makeStyles(theme => ({
@@ -46,14 +48,14 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function About({content}) {
+export default function Competition({content}) {
 
     const textEditorRef = useRef<TMUIRichEditor>()
 
     const sendProgressToDb = async (text:string) => {
         console.log('sending to db...')
         
-        const status = await updateContent(text, 'about')
+        const status = await updateContent(text, 'competition')
 
         return status
     }
@@ -62,7 +64,7 @@ export default function About({content}) {
     return (
         <>
             <Head>
-                <title>Admin About - Walton Economics Challenge</title>    
+                <title>Admin Competition - Walton Economics Challenge</title>    
             </Head>
             <div className={classes.root}>
                 <header className={classes.header}>
@@ -76,11 +78,24 @@ export default function About({content}) {
                         <Paper className={classes.paper} elevation={0}>
                             <Box>
                                 <Typography variant="h5">
-                                    Customize the About section content
+                                    Customize the Competition section content
                                 </Typography>
                             </Box>
-                            <ContentEditor content={content} additionalControls={[]} customControls={[]} saveToDB={sendProgressToDb}
-                            textEditorRef={textEditorRef} />
+                            <ContentEditor content={content} additionalControls={['add-topic-cards']}
+                             customControls={[{
+                                 name: 'add-topic-cards',
+                                 icon: <ViewColumnIcon />,
+                                 type: 'callback',
+                                 onClick: () => {
+                                     textEditorRef.current?.insertAtomicBlockSync('topic-cards', {})
+                                 }
+                             }, {
+                                 name: 'topic-cards',
+                                 type: 'atomic',
+                                 atomicComponent: TopicCards
+                             }]}
+                             saveToDB={sendProgressToDb}
+                             textEditorRef={textEditorRef} />
                         </Paper>
                     </Box>
                 </main>
@@ -95,7 +110,7 @@ export default function About({content}) {
 export async function getServerSideProps() {
     const db = await database()
 
-    const about:IAbout = await db.collection('content').findOne({'component': 'about'})
+    const competitionInfo:ICompetition = await db.collection('content').findOne({'component': 'competition'})
 
-    return {props: {content: about.content}}
+    return {props: {content: competitionInfo.content}}
 }
