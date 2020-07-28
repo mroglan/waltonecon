@@ -5,6 +5,7 @@ import {stateToHTML} from 'draft-js-export-html'
 import {Box} from '@material-ui/core'
 import {createMuiTheme, ThemeProvider} from '@material-ui/core'
 import HighlightIcon from '@material-ui/icons/Highlight';
+import LinkIcon from '@material-ui/icons/Link';
 
 // no need for all the controls for this project :)
 // const controls = [
@@ -32,7 +33,13 @@ Object.assign(theme, {
             },
             editorContainer: {
                 paddingLeft: '.5rem',
-                paddingRight: '.5rem'
+                paddingRight: '.5rem',
+                fontSize: '1.2rem', 
+                lineHeight: 1.6,
+                marginBottom: 16,
+                '& a': {
+                    color: '#1976d2 !important'
+                }
             }
         }
     }
@@ -51,6 +58,8 @@ export default function ContentTextarea3({content, inputRef, sendProgress}) {
     }, [])
 
     const updateContent = (data) => {
+        console.log(data) // this will show me what styles i have (e.g 'HIGHLIGHT', 'BOLD', etc.)
+
         // no need to store html in database...
         // const contentState = convertFromRaw(JSON.parse(data))
         // console.log('contentState', contentState)

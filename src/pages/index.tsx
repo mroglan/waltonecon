@@ -5,6 +5,8 @@ import About from '../components/About'
 import EmailSignUp from '../components/EmailSignUp'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import database from '../database/database'
+import {IAbout} from '../database/modelInterfaces'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,7 +58,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Home() {
+interface Props {
+  content: string;
+}
+
+export default function Home({content}:Props) {
 
   const classes = useStyles()
   return (
@@ -77,7 +83,7 @@ export default function Home() {
         <Box className={classes.mainContent}>
           <Grid container spacing={3} alignItems="center">
             <Grid item xs={12} md={8}>
-              <About />
+              <About content={content} />
             </Grid>
             <Grid item xs={12} md={4}>
               <EmailSignUp />
@@ -90,4 +96,12 @@ export default function Home() {
       </footer>
     </div>
   )
+}
+
+export async function getStaticProps() {
+  const db = await database()
+
+  const aboutInfo:IAbout = await db.collection('content').findOne({'component': 'about'})
+
+  return {props: {content: aboutInfo.content}, unstable_revalidate: 1}
 }

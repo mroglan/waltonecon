@@ -11,8 +11,12 @@ export interface IResource {
     topics: string[];
 }
 
-export interface IAbout {
+interface Content {
     _id: ObjectId;
-    content: string;
     component: string;
 }
+
+export interface IAbout extends Content {
+    content: string;
+}
+
