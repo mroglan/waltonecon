@@ -3,6 +3,7 @@ import {Box, FormControlLabel, Select, Typography, MenuItem} from '@material-ui/
 import {useState, useReducer} from 'react'
 import {IClientResource} from '../../database/modelInterfaces'
 import CreateCard from './resourceComponents/CreateCard'
+import ModifyCard from './resourceComponents/ModifyCard'
 
 interface Props {
     resources: IClientResource[]
@@ -10,7 +11,7 @@ interface Props {
 
 interface ResourceReducerAction {
     type: string;
-    payload: string;
+    payload: any;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -23,7 +24,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 function resourcesReducer(state:IClientResource[], action:ResourceReducerAction) {
-    switch(action.payload) {
+    switch(action.type) {
+        case 'ADD_CARD':
+            return [...state, action.payload]
+        case 'MODIFY':
+            const stateCopy = [...state]
+            stateCopy.splice(action.payload.index, 1, action.payload.newValues)
+            return stateCopy
         default:
             return state
     }
@@ -34,7 +41,7 @@ export default function ResourcesEditor({resources:dbResources}:Props) {
     const [resources, resourcesDispatch] = useReducer(resourcesReducer, dbResources)
 
     const [editingOption, setEditingOption] = useState('create-card')
-
+    
     const classes = useStyles()
     return (
         <Box mt={3}>
@@ -53,7 +60,8 @@ export default function ResourcesEditor({resources:dbResources}:Props) {
                 </Select>} />
             </Box>
             <Box mt={3}>
-                {editingOption === 'create-card' ? <CreateCard /> : ''}
+                {editingOption === 'create-card' ? <CreateCard dispatch={resourcesDispatch} /> : 
+                <ModifyCard resources={resources} dispatch={resourcesDispatch} /> }
             </Box>
         </Box>
     )

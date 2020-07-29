@@ -111,5 +111,7 @@ export async function getServerSideProps() {
         db.collection('resources').find({}).toArray()
     ])
 
+    //console.log('resources', resources)
+
     return {props: {content: resourcesInfo.content, resources: JSON.parse(JSON.stringify(resources))}}
 }
