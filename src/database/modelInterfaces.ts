@@ -11,6 +11,11 @@ export interface IResource {
     topics: string[];
 }
 
+export interface IClientResource extends Omit<IResource, '_id' | 'date'> {
+    _id: string;
+    date: string;
+}
+
 interface Content {
     _id: ObjectId;
     component: string;

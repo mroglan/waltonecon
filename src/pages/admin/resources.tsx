@@ -10,6 +10,7 @@ import ContentEditor from '../../components/admin/ContentEditor'
 import {TMUIRichEditor} from '../../components/admin/editorInterfaces'
 import { useRef } from 'react'
 import updateContent from '../../utils/requests/updateContent'
+import ResourcesEditor from '../../components/admin/ResourcesEditor'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -46,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Resources({content}) {
+export default function Resources({content, resources}) {
 
     const textEditorRef = useRef<TMUIRichEditor>()
 
@@ -73,13 +74,24 @@ export default function Resources({content}) {
                 <main className={classes.main}>
                     <Box mx={3}>
                         <Paper className={classes.paper} elevation={0}>
-                            <Box>
-                                <Typography variant="h5">
-                                    Customize the Resources section content
-                                </Typography>
+                            <Box mb={3}>
+                                <Box>
+                                    <Typography variant="h5">
+                                        Customize the Resource section content
+                                    </Typography>
+                                </Box>
+                                <ContentEditor content={content[0].content} additionalControls={[]} customControls={[]} saveToDB={sendProgressToDb}
+                                textEditorRef={textEditorRef} />
                             </Box>
-                            <ContentEditor content={content[0].content} additionalControls={[]} customControls={[]} saveToDB={sendProgressToDb}
-                            textEditorRef={textEditorRef} />
+                            <hr style={{border: 0, background: '#ccc', height: 1}} />
+                            <Box mt={3}>
+                                <Box>
+                                    <Typography variant="h5">
+                                        Customize the Resource cards
+                                    </Typography>
+                                </Box>
+                                <ResourcesEditor resources={resources} />
+                            </Box>
                         </Paper>
                     </Box>
                 </main>
@@ -99,7 +111,5 @@ export async function getServerSideProps() {
         db.collection('resources').find({}).toArray()
     ])
 
-    
-
-    return {props: {content: resourcesInfo.content}}
+    return {props: {content: resourcesInfo.content, resources: JSON.parse(JSON.stringify(resources))}}
 }
