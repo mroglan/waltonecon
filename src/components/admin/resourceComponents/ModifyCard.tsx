@@ -35,7 +35,7 @@ export default function ModifyCard({resources, dispatch}:Props) {
             }
             return true
         })
-    }, [resources])
+    }, [resources, originalResources])
 
     const [selectedResource, setSelectedResource] = useState(-1)
 

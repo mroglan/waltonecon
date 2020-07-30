@@ -1,7 +1,7 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Box, Grid, Paper, Typography, Button} from '@material-ui/core'
 import database from '../../database/database'
-import { IResourcesText } from '../../database/modelInterfaces'
+import { IClientResource } from '../../database/modelInterfaces'
 import Head from 'next/head'
 import AdminHeader from '../../components/admin/AdminHeader'
 import SideBar from '../../components/admin/SideBar'
@@ -47,7 +47,15 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Resources({content, resources}) {
+interface Props {
+    resources: IClientResource[];
+    content: {
+        type: string;
+        content: string;
+    }[];
+}
+
+export default function Resources({content, resources}:Props) {
 
     const textEditorRef = useRef<TMUIRichEditor>()
 

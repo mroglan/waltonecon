@@ -16,9 +16,7 @@ async function createCard(content:Content) {
 async function modifyCards(resources:IResource[]) {
     const db = await database()
     const idArray = resources.map(resource => resource._id)
-    // await db.collection('resources').updateMany({'_id': {'$in': idArray}}, {
-    //     '$set': {...resources}
-    // })
+    
     await Promise.all(idArray.map((id, i) => db.collection('resources').updateOne({'_id': id}, {'$set': {...resources[i]}})))
 }
 
