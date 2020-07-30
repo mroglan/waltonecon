@@ -3,6 +3,10 @@ import {Box, Grid, Paper, Typography} from '@material-ui/core'
 import Head from 'next/head'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import database from '../database/database'
+import {IContact} from '../database/modelInterfaces'
+import getHTMLFromContentState from '../utils/getHTMLFromContentState'
+import ContentBox from '../components/items/ContentBox'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -51,7 +55,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Contact() {
+export default function Contact({content}) {
+
+    const contentWithHTML = content.map(message => (
+        {...message, htmlText: message.type === 'contentEditorContent' ? getHTMLFromContentState(message.content) : ''}
+    ))
 
     const classes = useStyles()
     return (
@@ -70,49 +78,8 @@ export default function Contact() {
                                         Contact
                                     </Typography>
                                 </Box>
-                                <Box py={3}>
-                                    <Typography variant="body1" className={classes.text}>
-                                        Feel free to contact us if you have any questions or concerns!
-                                    </Typography>
-                                </Box>
-                                <Box py={3}>
-                                    <Typography variant="h6">
-                                        Club Email
-                                    </Typography>
-                                    <Typography variant="body1" className={classes.text}>
-                                        <a href="mailto:waltoneconchallenge@gmail.com" className={classes.link}>
-                                            waltoneconchallenge@gmail.com
-                                        </a>
-                                    </Typography>
-                                </Box>
-                                <Box py={3}>
-                                    <Typography variant="h6">
-                                        Teacher Sponsor
-                                    </Typography>
-                                    <Typography variant="body1" className={classes.text}>
-                                        <a href="mailto:David.Dewar@cobbk12.org" className={classes.link}>
-                                            David.Dewar@cobbk12.org
-                                        </a>
-                                    </Typography>
-                                </Box>
-                                <Box py={3}>
-                                    <Typography variant="h6">
-                                        Officers
-                                    </Typography>
-                                    <ul  className={classes.list}>
-                                        <li>
-                                            President: Manuel Roglan
-                                        </li>
-                                        <li>
-                                            Vice President: Aditya Palliyil 
-                                        </li>
-                                        <li>
-                                            Coordinator: Denis
-                                        </li>
-                                        <li>
-                                            Secretary: Frida Knudsen 
-                                        </li>
-                                    </ul>
+                                <Box>
+                                    {contentWithHTML.map(({htmlText}, index) => <ContentBox key={index} text={htmlText} />)}
                                 </Box>
                             </Paper>
                         </Grid>
@@ -126,3 +93,62 @@ export default function Contact() {
     )
 }
 
+export async function getStaticProps() {
+
+    const db = await database()
+
+    const contactInfo:IContact = await db.collection('content').findOne({'component': 'contact'})
+
+    return {props: {content: contactInfo.content}, unstable_revalidate: 1}
+}
+
+/*
+
+Original Contact info:
+
+<Box py={3}>
+    <Typography variant="body1" className={classes.text}>
+        Feel free to contact us if you have any questions or concerns!
+    </Typography>
+</Box>
+<Box py={3}>
+    <Typography variant="h6">
+        Club Email
+    </Typography>
+    <Typography variant="body1" className={classes.text}>
+        <a href="mailto:waltoneconchallenge@gmail.com" className={classes.link}>
+            waltoneconchallenge@gmail.com
+        </a>
+    </Typography>
+</Box>
+<Box py={3}>
+    <Typography variant="h6">
+        Teacher Sponsor
+    </Typography>
+    <Typography variant="body1" className={classes.text}>
+        <a href="mailto:David.Dewar@cobbk12.org" className={classes.link}>
+            David.Dewar@cobbk12.org
+        </a>
+    </Typography>
+</Box>
+<Box py={3}>
+    <Typography variant="h6">
+        Officers
+    </Typography>
+    <ul  className={classes.list}>
+        <li>
+            President: Manuel Roglan
+        </li>
+        <li>
+            Vice President: Aditya Palliyil 
+        </li>
+        <li>
+            Coordinator: Denis
+        </li>
+        <li>
+            Secretary: Frida Knudsen 
+        </li>
+    </ul>
+</Box>
+
+*/

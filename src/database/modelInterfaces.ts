@@ -38,3 +38,7 @@ export interface IResourcesText extends Content {
     content: ContentItem[];
 }
 
+export interface IContact extends Content {
+    content: ContentItem[];
+}
+
