@@ -20,6 +20,12 @@ async function modifyCards(resources:IResource[]) {
     await Promise.all(idArray.map((id, i) => db.collection('resources').updateOne({'_id': id}, {'$set': {...resources[i]}})))
 }
 
+async function deleteCards(ids:ObjectId[]) {
+    const db = await database()
+
+    await db.collection('resources').deleteMany({'_id': {'$in': ids}})
+}
+
 export default async function ModifyCards(req:NextApiRequest, res:NextApiResponse) {
 
     try {
@@ -35,6 +41,12 @@ export default async function ModifyCards(req:NextApiRequest, res:NextApiRespons
             ))
             await modifyCards(req.body.resources)
             return res.status(200).json({msg: 'Successful update'})
+        }
+
+        if(req.body.operation === 'delete') {
+            const objectIds = req.body.ids.map(id => new ObjectId(id))
+            await deleteCards(objectIds)
+            return res.status(200).json({msg: 'Successful deletion'})
         }
 
         return res.status(400).json({msg: 'Invalid request'})

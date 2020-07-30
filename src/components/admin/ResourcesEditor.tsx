@@ -4,6 +4,7 @@ import {useState, useReducer} from 'react'
 import {IClientResource} from '../../database/modelInterfaces'
 import CreateCard from './resourceComponents/CreateCard'
 import ModifyCard from './resourceComponents/ModifyCard'
+import DeleteCard from './resourceComponents/DeleteCard'
 
 interface Props {
     resources: IClientResource[]
@@ -31,6 +32,8 @@ function resourcesReducer(state:IClientResource[], action:ResourceReducerAction)
             const stateCopy = [...state]
             stateCopy.splice(action.payload.index, 1, action.payload.newValues)
             return stateCopy
+        case 'REPLACE_CARDS':
+            return action.payload
         default:
             return state
     }
@@ -57,11 +60,14 @@ export default function ResourcesEditor({resources:dbResources}:Props) {
                     <MenuItem value="modify-card">
                         Modify an existing card
                     </MenuItem>
+                    <MenuItem value="remove-card">
+                        Remove an existing card
+                    </MenuItem>
                 </Select>} />
             </Box>
             <Box mt={3}>
-                {editingOption === 'create-card' ? <CreateCard dispatch={resourcesDispatch} /> : 
-                <ModifyCard resources={resources} dispatch={resourcesDispatch} /> }
+                {editingOption === 'create-card' ? <CreateCard dispatch={resourcesDispatch} /> : editingOption === 'modify-card' ?
+                <ModifyCard resources={resources} dispatch={resourcesDispatch} /> : <DeleteCard resources={resources} dispatch={resourcesDispatch} /> }
             </Box>
         </Box>
     )

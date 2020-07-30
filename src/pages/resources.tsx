@@ -164,11 +164,9 @@ export async function getStaticProps() {
     const db = await database()
     
     const [resources, resourcesInfo] = await Promise.all([
-        db.collection('resources').find({}).toArray(), 
+        db.collection('resources').find({}).sort({'date': -1}).toArray(), 
         db.collection('content').findOne({'component': 'resources'})
     ])
-
-    //console.log('resources', resources)
 
     return {props: {resources: JSON.parse(JSON.stringify(resources)), content: resourcesInfo.content}, unstable_revalidate: 1}
 }

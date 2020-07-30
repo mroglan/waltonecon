@@ -30,7 +30,6 @@ export default function ContentEditor({content, saveToDB, additionalControls, cu
         setLoading(false)
     }
 
-    console.log('loading', loading)
     const classes = useStyles()
     return (
         <Box>

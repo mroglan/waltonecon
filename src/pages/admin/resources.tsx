@@ -116,10 +116,8 @@ export async function getServerSideProps() {
 
     const [resourcesInfo, resources] = await Promise.all([
         db.collection('content').findOne({'component': 'resources'}),
-        db.collection('resources').find({}).toArray()
+        db.collection('resources').find({}).sort({'date': -1}).toArray()
     ])
-
-    //console.log('resources', resources)
 
     return {props: {content: resourcesInfo.content, resources: JSON.parse(JSON.stringify(resources))}}
 }

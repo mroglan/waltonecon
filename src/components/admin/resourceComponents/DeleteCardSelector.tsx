@@ -1,9 +1,9 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Box, Grid} from '@material-ui/core'
-import {useMemo, MouseEvent} from 'react'
 import ResourceCard from '../../resources/ResourceCard'
 import {IClientResource} from '../../../database/modelInterfaces'
 import shortenDesc from '../../../utils/shortenDesc'
+import {useMemo, MouseEvent, SetStateAction} from 'react'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,21 +18,23 @@ const useStyles = makeStyles(theme => ({
 
 interface Props {
     resources: IClientResource[];
-    editedResources: boolean[];
-    selectedResource: number;
-    setSelectedResource: (i:number) => void;
+    deletedResources: boolean[];
+    setDeletedResources: SetStateAction<any>;
 }
 
-export default function CardSelector({resources:rawResources, editedResources, selectedResource, setSelectedResource}:Props) {
+export default function DeleteCardSelector({resources:rawResources, deletedResources, setDeletedResources}:Props) {
 
-    // reduce description char length to max of 50
-    const resources:IClientResource[] = useMemo(() => {
+    const resources = useMemo(() => {
         return shortenDesc(rawResources)
     }, [rawResources])
 
     const handleClick = (e:MouseEvent, index:number) => {
         e.preventDefault() // if editor clicks on the link, will not be redirected
-        setSelectedResource(index)
+        setDeletedResources(current => {
+            const copy =[...current]
+            copy[index] = !copy[index]
+            return copy
+        })
     }
 
     const classes = useStyles()
@@ -41,7 +43,7 @@ export default function CardSelector({resources:rawResources, editedResources, s
             <Grid container alignItems="stretch" wrap="nowrap" >
                 {resources.map((resource, i) => (
                     <Grid key={resource._id} item className={classes.gridItem} style={{
-                        border: `${selectedResource === i ? 2 : 1}px solid ${editedResources[i] ? '#ffb74d' : '#000'}`,
+                        border: `${deletedResources[i] ? 2 : 1}px solid ${deletedResources[i] ? '#f50057' : '#000'}`,
                         borderRadius: 4
                     }} onClick={(e) => handleClick(e, i)}>
                         <ResourceCard resource={resource} />
