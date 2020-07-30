@@ -14,6 +14,9 @@ const useStyles = makeStyles(theme => ({
             '&:hover': {
                 textDecoration: 'underline'
             }
+        },
+        '& ul': {
+            marginTop: -theme.spacing(2)
         }
     }
 }))
