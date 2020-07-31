@@ -10,6 +10,9 @@ import ContentEditor from '../../components/admin/ContentEditor'
 import {TMUIRichEditor} from '../../components/admin/editorInterfaces'
 import { useRef } from 'react'
 import updateContent from '../../utils/requests/updateContent'
+import {GetServerSidePropsContext} from 'next'
+import checkIsAuthenticated from '../../utils/checkIsAuthenticated'
+import {redirectToLogin} from '../../utils/serverSideRedirect'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -92,7 +95,14 @@ export default function About({content}) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx:GetServerSidePropsContext) {
+
+    const isAuth = await checkIsAuthenticated(ctx)
+
+    if(!isAuth) {
+        redirectToLogin(ctx)
+    }
+
     const db = await database()
 
     const about:IAbout = await db.collection('content').findOne({'component': 'about'})

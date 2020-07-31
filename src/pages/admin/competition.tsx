@@ -12,6 +12,9 @@ import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import TopicCards from '../../components/competition/TopicCards'
 import {TMUIRichEditor} from '../../components/admin/editorInterfaces'
 import updateContent from '../../utils/requests/updateContent'
+import {GetServerSidePropsContext} from 'next'
+import checkIsAuthenticated from '../../utils/checkIsAuthenticated'
+import {redirectToLogin} from '../../utils/serverSideRedirect'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -117,7 +120,14 @@ export default function Competition({content}) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx:GetServerSidePropsContext) {
+
+    const isAuth = await checkIsAuthenticated(ctx)
+
+    if(!isAuth) {
+        redirectToLogin(ctx)
+    }
+
     const db = await database()
 
     const competitionInfo:ICompetition = await db.collection('content').findOne({'component': 'competition'})

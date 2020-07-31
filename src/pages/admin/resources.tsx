@@ -11,6 +11,9 @@ import {TMUIRichEditor} from '../../components/admin/editorInterfaces'
 import { useRef } from 'react'
 import updateContent from '../../utils/requests/updateContent'
 import ResourcesEditor from '../../components/admin/ResourcesEditor'
+import {GetServerSidePropsContext} from 'next'
+import checkIsAuthenticated from '../../utils/checkIsAuthenticated'
+import {redirectToLogin} from '../../utils/serverSideRedirect'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -111,7 +114,14 @@ export default function Resources({content, resources}:Props) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx:GetServerSidePropsContext) {
+
+    const isAuth = await checkIsAuthenticated(ctx)
+
+    if(!isAuth) {
+        redirectToLogin(ctx)
+    }
+
     const db = await database()
 
     const [resourcesInfo, resources] = await Promise.all([

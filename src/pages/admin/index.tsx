@@ -5,6 +5,9 @@ import Footer from '../../components/Footer'
 import SideBar from '../../components/admin/SideBar'
 import AdminHeader from '../../components/admin/AdminHeader'
 import Head from 'next/head'
+import {GetServerSidePropsContext} from 'next'
+import checkIsAuthenticated from '../../utils/checkIsAuthenticated'
+import {redirectToLogin} from '../../utils/serverSideRedirect'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -82,4 +85,14 @@ export default function Admin() {
         </div>
         </>
     )
+}
+
+export async function getServerSideProps(ctx:GetServerSidePropsContext) {
+    const isAuth = await checkIsAuthenticated(ctx)
+
+    if(!isAuth) {
+        redirectToLogin(ctx)
+    }
+
+    return {props: {}}
 }

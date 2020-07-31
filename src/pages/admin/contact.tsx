@@ -9,6 +9,9 @@ import {TMUIRichEditor} from '../../components/admin/editorInterfaces'
 import ContentEditor from '../../components/admin/ContentEditor'
 import {useRef} from 'react'
 import updateContent from '../../utils/requests/updateContent'
+import {GetServerSidePropsContext} from 'next'
+import checkIsAuthenticated from '../../utils/checkIsAuthenticated'
+import {redirectToLogin} from '../../utils/serverSideRedirect'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -96,7 +99,14 @@ export default function Contact({content}:Props) {
     )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(ctx:GetServerSidePropsContext) {
+
+    const isAuth = await checkIsAuthenticated(ctx)
+
+    if(!isAuth) {
+        redirectToLogin(ctx)
+    }
+
     const db = await database()
 
     const contactInfo:IContact = await db.collection('content').findOne({'component': 'contact'})
