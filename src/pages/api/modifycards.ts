@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import database from '../../database/database'
 import {ObjectId} from 'mongodb'
 import {IClientResource, IResource} from '../../database/modelInterfaces'
+import {verifyUser} from '../../utils/verifyUser'
 
 interface Content extends Omit<IClientResource, '_id' | 'date'> {
     date: Date;
@@ -26,7 +27,7 @@ async function deleteCards(ids:ObjectId[]) {
     await db.collection('resources').deleteMany({'_id': {'$in': ids}})
 }
 
-export default async function ModifyCards(req:NextApiRequest, res:NextApiResponse) {
+export default verifyUser(async function ModifyCards(req:NextApiRequest, res:NextApiResponse) {
 
     try {
         if(req.body.operation === 'create') {
@@ -54,4 +55,4 @@ export default async function ModifyCards(req:NextApiRequest, res:NextApiRespons
         console.log(e)
         return res.status(500).json({msg: 'Internal Server Error'})
     }
-}
+})

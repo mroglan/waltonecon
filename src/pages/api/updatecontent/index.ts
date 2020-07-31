@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import database from '../../../database/database'
+import {verifyUser} from '../../../utils/verifyUser'
 
-export default async function UpdateAbout(req:NextApiRequest, res:NextApiResponse) {
+export default verifyUser(async function UpdateAbout(req:NextApiRequest, res:NextApiResponse) {
 
     try {
         const db = await database()
@@ -15,4 +16,4 @@ export default async function UpdateAbout(req:NextApiRequest, res:NextApiRespons
 
         return res.status(500).json({msg: 'Internal Server Error'})
     }
-}
+})
