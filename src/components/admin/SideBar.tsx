@@ -62,6 +62,15 @@ export default function SideBar() {
                     </a>
                 </Link>
             </Box>
+            <Box py={1} pl={1} component="section" className={classes.section}>
+                <Link href="/admin/emails">
+                    <a className={classes.link}>
+                        <Typography variant="button" className={classes.text}>
+                            Email List
+                        </Typography>
+                    </a>
+                </Link>
+            </Box>
         </Box>
     )
 }
