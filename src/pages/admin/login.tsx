@@ -74,6 +74,7 @@ export default function Login() {
     }
 
     const responseFail = (response:GoogleLoginResponse) => {
+        console.log(response)
         setMessage({type: 'error', content: 'Failed to recieve response from Google'})
     }
 
