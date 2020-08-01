@@ -1,5 +1,8 @@
 import {makeStyles} from '@material-ui/core/styles'
 import {Typography, Box, Paper, FormControl, OutlinedInput, Button} from '@material-ui/core'
+import {FormEvent, useState} from 'react'
+import SuccessSnackbar from './items/SuccessSnackbar'
+import ErrorSnackbar from './items/ErrorSnackbar'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,20 +31,58 @@ const useStyles = makeStyles(theme => ({
 
 export default function EmailSignUp() {
 
+    const [email, setEmail] = useState('')
+    
+    const [response, setResponse] = useState({
+        type: '',
+        message: ''
+    })
+
+    const handleSubmit = async (e:FormEvent) => {
+        e.preventDefault()
+
+        const res = await fetch(`${process.env.BASE_ROUTE}/api/addemail`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email
+            })
+        })
+
+        if(res.status !== 200) {
+            const json = await res.json()
+            setResponse({
+                type: 'error',
+                message: json.msg
+            }) 
+            return
+        }
+        setEmail('')
+        setResponse({type: 'success', message: 'Email added!'})
+    }
+
     const classes = useStyles()
     return (
         <Paper className={classes.root} elevation={3}>
             <Typography variant="h6" className={classes.title}>
                 Join our email list!
             </Typography>
-            <FormControl fullWidth variant="outlined">
-                <OutlinedInput placeholder="bob@gmail.com" />
-            </FormControl>
-            <Box textAlign="center" paddingTop={3}>
-                <Button variant="outlined" color="primary" className={classes.button}>
-                    Join
-                </Button>
-            </Box>
+            <form>
+                <FormControl fullWidth variant="outlined">
+                    <OutlinedInput placeholder="bob@gmail.com" required type="email"
+                    value={email} onChange={(e) => setEmail(e.target.value)} />
+                </FormControl>
+                <Box textAlign="center" paddingTop={3}>
+                    <Button variant="outlined" color="primary" type="submit" className={classes.button}
+                    onClick={handleSubmit} >
+                        Join
+                    </Button>
+                </Box>
+            </form>
+            {response.type === 'error' ? <ErrorSnackbar  message={response} setMessage={setResponse} /> : response.type === 'success' ?
+            <SuccessSnackbar message={response} setMessage={setResponse} /> : null }
         </Paper>
     )
 }
