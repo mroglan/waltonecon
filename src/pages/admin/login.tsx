@@ -52,7 +52,7 @@ export default function Login() {
 
     const responseSuccess = async (response:GoogleLoginResponse) => {
     
-        setMessage({type: 'loading', content: 'Signing you in'})
+        setMessage({type: 'loading', content: 'Signing you in...'})
 
         const res = await fetch(`${process.env.BASE_ROUTE}/api/login`, {
             method: 'POST',
