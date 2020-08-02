@@ -72,7 +72,7 @@ export default function Header() {
             <Toolbar style={{alignItems: 'center'}}>
                 <Link href="/">
                     <a style={{textDecoration: 'none'}}>
-                        <Grid container alignItems="center" spacing={1}>
+                        <Grid container alignItems="center" wrap="nowrap" spacing={1}>
                             <Grid item>
                                 <img src="/waltonLogo.png" alt="Walton Logo" className={classes.img} />
                             </Grid>
