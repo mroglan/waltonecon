@@ -41,6 +41,14 @@ export default function EmailSignUp() {
     const handleSubmit = async (e:FormEvent) => {
         e.preventDefault()
 
+        if(!Boolean(email)) {
+            setResponse({
+                type: 'error',
+                message: 'Please enter an email'
+            })
+            return
+        }
+
         const res = await fetch(`${process.env.BASE_ROUTE}/api/addemail`, {
             method: 'POST',
             headers: {
