@@ -86,7 +86,7 @@ export default function Header() {
                 </Link>
                 <div style={{flexGrow: 1}} />
                 <div className={classes.showSmUp}>
-                    <Grid container spacing={3}>
+                    <Grid container wrap="nowrap" spacing={3}>
                         <Grid item>
                             <Link href="/competition">
                                 <a className={classes.link}>
