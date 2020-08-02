@@ -37,7 +37,10 @@ const useStyles = makeStyles(theme => ({
   title: {
     color: '#fff',
     textAlign: 'center',
-    textShadow: '-3px 5px 9px #000'
+    textShadow: '-3px 5px 9px #000',
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '3.5rem'
+    }
   },
   titleBackgroundImage: {
     position: 'absolute',
