@@ -108,3 +108,5 @@ export async function getStaticProps() {
 
   return {props: {content: aboutInfo.content}, unstable_revalidate: 1}
 }
+
+//redeploy
