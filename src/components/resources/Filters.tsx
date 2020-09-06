@@ -105,7 +105,7 @@ export default function Filters({filters, dispatch}) {
                             })} label="Resource type" className={classes.select}>
                                 <MenuItem value="any">Any</MenuItem>
                                 <MenuItem value="presentations">Presentations</MenuItem>
-                                <MenuItem value="pTests">Practice Tests</MenuItem>
+                                <MenuItem value="pProblems">Practice Problems</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

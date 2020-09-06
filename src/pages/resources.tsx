@@ -86,7 +86,7 @@ function correctTopic(topic:string, filter:string) {
 function correctResourceType(type:string, filter:string) {
     if(filter === 'any') return true
     if(filter === 'presentations' && type === 'Presentation') return true
-    if(filter === 'pTests' && type === 'Practice Test') return true
+    if(filter === 'pProblems' && type === 'Practice Problems') return true
 
     return false
 }
