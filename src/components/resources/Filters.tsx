@@ -106,6 +106,7 @@ export default function Filters({filters, dispatch}) {
                                 <MenuItem value="any">Any</MenuItem>
                                 <MenuItem value="presentations">Presentations</MenuItem>
                                 <MenuItem value="pProblems">Practice Problems</MenuItem>
+                                <MenuItem value="quizizz">Quizizz</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

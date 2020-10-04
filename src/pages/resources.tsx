@@ -87,6 +87,7 @@ function correctResourceType(type:string, filter:string) {
     if(filter === 'any') return true
     if(filter === 'presentations' && type === 'Presentation') return true
     if(filter === 'pProblems' && type === 'Practice Problems') return true
+    if(filter === 'quizizz' && type === 'Quizizz') return true
 
     return false
 }
