@@ -18,7 +18,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.9",
     "mui-rte": "^1.23.1",
-    "next": "9.4.4",
+    "next": "11.1.0",
     "nookies": "^2.3.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
